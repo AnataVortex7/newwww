@@ -299,7 +299,15 @@ async def drm_handler(bot: Client, m: Message):
                 params = {"url": f"{url}"}
                 response = requests.get('https://api.classplusapp.com/cams/uploader/video/jw-signed-url', headers=headers, params=params)
                 url = response.json()['url']  
-           
+            elif "dragoapi.vercel.app" in url:
+                # cmd = f'yt-dlp --add-header "referer:https://player.akamai.net.in" -f "{ytf}" "{url}" -o "{name}.mp4"'
+                cmd = f'yt-dlp --add-header "referer:https://player.akamai.net.in" -o "{name}.pdf" "{url}cmd = f'yt-dlp --add-header "referer:https://player.akamai.net.in" -o "{name}.pdf" "{url}"'
+                download_cmd = f"{cmd} -R 25 --fragment-retries 25"
+                os.system(download_cmd)
+                copy = await bot.send_document(chat_id=channel_id, document=f'{name}.pdf', caption=cc1, message_thread_id=current_thread_id)
+                count += 1
+                os.remove(f'{name}.pdf')
+
             elif 'videos.classplusapp' in url:
                 url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={url}', headers={'x-access-token': f'{cptoken}'}).json()['url']
             
